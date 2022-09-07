@@ -1,0 +1,49 @@
+---
+title: "SeqCounter"
+author: "Luca Procaccio"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{SeqCounter}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r, echo = FALSE}
+library(knitr)
+```
+
+```{r setup}
+library(SeqCounter)
+```
+
+# Introduction
+
+SeqCounter is a package which takes:
+1) a reference genome (e.g., human hg38)
+2) a set of interesting genomic regions (e.g., all 3’UTRs of coding genes)
+3) a set of short search sequences (e.g., miRNA binding seeds) to be identified within the 
+interesting genomics regions (exact matching)
+and returns an overall count for each search sequence within the interesting genomic regions
+
+# Example
+
+```{r, echo=FALSE, message=FALSE}
+library(TxDb.Hsapiens.UCSC.hg38.knownGene)
+library(Biostrings)
+```
+
+```{r, warning=FALSE}
+hg38 <- BSgenome.Hsapiens.UCSC.hg38::BSgenome.Hsapiens.UCSC.hg38
+txdb <- TxDb.Hsapiens.UCSC.hg38.knownGene::TxDb.Hsapiens.UCSC.hg38.knownGene
+promoters <- promoters(txdb, upstream=2000, downstream=200)
+promoters <- trim(promoters)
+patterns <- DNAStringSet(c("TATAAAA", "TATATAT", "TATAAAT"))
+```
